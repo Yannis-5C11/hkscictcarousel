@@ -1,6 +1,16 @@
 <script>
   import Button from "./Button.svelte";
   import Carousel from "./Carousel.svelte";
+  let isShown = false;
+  let images = [
+    "https://i.imgur.com/cHNuyQr.jpeg",
+    "https://i.imgur.com/Izh5ZHd.jpg",
+    "https://i.imgur.com/5V73tPG.jpg",
+    "https://i.imgur.com/uSKu6Fl.jpg"
+  ];
+  let hue = 4698;
+  let carousel, n;
+  $: if (carousel) carousel.go(n);
 </script>
 
 <style>
@@ -19,18 +29,19 @@
 	<Button />
   <br>
   <br>
-  <Carousel perPage="1">
+  {#if isShown}
+  <input type="range" step="1" min="0" max="3" bind:value={n} />
+  <Carousel perPage="1" bind:this={carousel}>
+  {#each images as image, i}
   <div class="slide-content">
-  <img alt="1" src="https://i.imgur.com/cHNuyQr.jpeg">
+  <img alt= {i} src= {image}>
  </div>
-  <div class="slide-content">
-  <img alt="2" src="https://i.imgur.com/Izh5ZHd.jpg">
-  </div>
-  <div class="slide-content">
-   <img alt="3" src="https://i.imgur.com/5V73tPG.jpg">
-  </div>
-  <div class="slide-content">
-   <img alt="4" src="https://i.imgur.com/uSKu6Fl.jpg">
-  </div>
+  {/each}
 </Carousel>
+{:else}
+ <div 
+ on:click={()=> isShown = true}
+ on:mousemove={e => hue = e.clientX * e.clientY}
+ style="background: hsl({hue / 500},100%, 50%); height:50vh"/>
+{/if}
 </main>
